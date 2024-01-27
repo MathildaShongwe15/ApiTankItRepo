@@ -25,7 +25,7 @@ func UserCreate(c *gin.Context) {
 	}
 	c.Bind(&body)
 
-	user := models.Users{Name: body.Name, Surname: body.Surname, Email: body.Email, PhoneNumber: body.PhoneNumber, CarRegistration: body.CarRegistration, Cartype: body.Cartype}
+	user := models.User{Name: body.Name, Surname: body.Surname, Email: body.Email, PhoneNumber: body.PhoneNumber, CarRegistration: body.CarRegistration, Cartype: body.Cartype}
 	result := initializers.DB.Create(&user)
 
 	//create a get
