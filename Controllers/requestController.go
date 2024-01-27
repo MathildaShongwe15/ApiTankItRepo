@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// create a request Type
 func RequestCreate(c *gin.Context) {
 
 	//get data off req body
@@ -33,10 +34,10 @@ func RequestCreate(c *gin.Context) {
 	})
 }
 
+// View all request types
 func RequestTypeGetAll(c *gin.Context) {
 
 	var requests []models.Request
-	//c.Bind((&body))
 
 	initializers.DB.Find(&requests)
 
@@ -45,7 +46,20 @@ func RequestTypeGetAll(c *gin.Context) {
 
 	//return the get
 	c.JSON(200, gin.H{
-		"requests": "requests",
+		"requests": requests,
 	})
+}
 
+// find requestType
+func FindRequest(c *gin.Context) {
+
+	id := c.Param("id")
+	var request models.Request
+
+	initializers.DB.First(&request, id)
+
+	//return the get
+	c.JSON(200, gin.H{
+		"requests": request,
+	})
 }
