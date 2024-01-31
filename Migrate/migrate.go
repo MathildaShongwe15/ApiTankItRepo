@@ -3,7 +3,7 @@ package main
 import (
 	initializers "myapp/Initializers"
 	models "myapp/Models"
-	//	models "myapp/Models"
+	//models "myapp/Models"
 )
 
 func init() {
@@ -14,8 +14,7 @@ func init() {
 
 func main() {
 
-	initializers.DB.AutoMigrate(&models.Request{})
 	initializers.DB.AutoMigrate(&models.User{})
-	initializers.DB.AutoMigrate(&models.UserRequest{})
+	//initializers.DB.AutoMigrate(&models.ServicesRequest{})
 
 }

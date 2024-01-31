@@ -13,11 +13,21 @@ func init() {
 }
 func main() {
 	r := gin.Default()
-	r.POST("/request", controllers.RequestCreate)
-	//r.PUT("/request/:id", controllers.RequestTypeUpdate)
-	r.GET("/requestAvailable", controllers.RequestTypeGetAll)
-	r.GET("/request:id", controllers.FindRequest)
 
-	r.POST("/user", controllers.UserCreate)
+	// router := gin.New()
+	// router.Use(gin.Logger())
+
+	//routes.AuthRoutes(router)
+	//routes.UserRoutes(router)
+
+	//r.POST("/createRequest", controllers.UserRequestCreate)
+	//r.PUT("/request/:id", controllers.RequestTypeUpdate)
+	//r.GET("/AllservicesRequested", controllers.ServiceTypeGetAll)
+
+	//r.POST("/user", controllers.UserCreate)
+
+	r.POST("/Auth", controllers.SignUp)
+	r.POST("/Login", controllers.Login)
+
 	r.Run()
 }

@@ -1,42 +1,111 @@
 package controllers
 
 import (
-	// initializers "myapp/Initializers"
-	// models "myapp/Models"
-
 	initializers "myapp/Initializers"
 	models "myapp/Models"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func UserCreate(c *gin.Context) {
+// import "net/http"
+func SignUp(c *gin.Context) {
 
-	//get data off req body
-
+	//Get email/pass off req body
 	var body struct {
-		ID              uint   `gorm:"primaryKey"`
-		Name            string `gorm:"size:50"`
-		Surname         string `gorm:"size:50"`
-		Email           string `gorm:"size:100"`
-		PhoneNumber     string `gorm:"size:15"`
-		CarRegistration string `gorm:"size:15"`
-		Cartype         string `gorm:"size:50"`
+		Email    string
+		Password string
 	}
-	c.Bind(&body)
 
-	user := models.User{Name: body.Name, Surname: body.Surname, Email: body.Email, PhoneNumber: body.PhoneNumber, CarRegistration: body.CarRegistration, Cartype: body.Cartype}
-	result := initializers.DB.Create(&user)
-
-	//create a get
-	if result.Error != nil {
-		c.Status(400)
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read body",
+		})
 		return
 	}
 
-	//RETURN IT
+	//Hash the password
 
-	c.JSON(200, gin.H{
-		"user": user,
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to hash password",
+		})
+	}
+
+	//create the user
+
+	user := models.User{Email: body.Email, Password: string(hash)}
+	result := initializers.DB.Create(&user)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to hash password",
+		})
+		return
+	}
+	//Respond
+	c.JSON(http.StatusOK, gin.H{})
+}
+
+func Login(c *gin.Context) {
+	//get the email  and pass off request body
+	var body struct {
+		Email    string
+		Password string
+	}
+
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read body",
+		})
+		return
+	}
+
+	//Look up requested user
+	var user models.User
+	initializers.DB.First(&user, "email = ?", body.Email)
+
+	if user.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid email or password",
+		})
+		return
+	}
+	//compare sent in pass with saved user pass hash
+
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid email or password",
+		})
+		return
+	}
+	//generate a jwt toke
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub": user.ID,
+		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to create token",
+		})
+	}
+	//send it back
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": tokenString,
 	})
 }

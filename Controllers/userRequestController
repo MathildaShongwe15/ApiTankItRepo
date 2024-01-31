@@ -1,4 +1,67 @@
 package controllers
 
-// initializers "myapp/Initializers"
-// models "myapp/Models"
+import (
+	initializers "myapp/Initializers"
+	models "myapp/Models"
+
+	"github.com/gin-gonic/gin"
+)
+
+func UserRequestCreate(c *gin.Context) {
+
+	var body struct {
+		ID     uint
+		UserId uint
+		Type   string
+		Amount float32
+		Users  User
+	}
+
+	c.Bind(&body)
+
+	serviceRequest := models.ServicesRequest{body.ID, body.UserId, body.Type, body.Amount}
+	result := initializers.DB.Create(&serviceRequest)
+
+	//create a get
+	if result.Error != nil {
+		c.Status(400)
+		return
+	}
+
+	//RETURN IT
+
+	c.JSON(200, gin.H{
+		"request": request,
+	})
+
+}
+
+// View all request types
+func ServiceRequestGetAll(c *gin.Context) {
+
+	var requests []models.ServicesRequest
+
+	initializers.DB.Find(&requests)
+
+	// var requestTypes []models.RequestType
+	// initializers.DB.Find(&requestTypes)
+
+	//return the get
+	c.JSON(200, gin.H{
+		"requests": requests,
+	})
+
+}
+
+// // find requestType
+// func Service(c *gin.Context) {
+
+// 	id := c.Param("id")
+// 	var request models.Services
+
+// 	initializers.DB.First(&request, id)
+
+// 	//return the get
+// 	c.JSON(200, gin.H{
+// 		"requests": request,
+// 	})
