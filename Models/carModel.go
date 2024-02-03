@@ -4,13 +4,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type car struct {
+type Car struct {
 	gorm.Model
 
-	Id       string
-	CarType  string
-	RegNo    string
-	Location string
+	Userid   uint
+	CarModel string `gorm:"size:100"`
+	RegNo    string `gorm:"size:15"`
+	Users    User   `gorm:"foreignKey:Userid ;references:id;"`
 }
-
-//update location
