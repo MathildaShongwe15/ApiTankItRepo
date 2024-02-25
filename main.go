@@ -30,6 +30,7 @@ func main() {
 	r.POST("/Auth", controllers.SignUp)
 	r.POST("/Login", controllers.Login)
 	r.GET("/Validate", middleware.RequireAuth, controllers.Validate)
+	r.GET("/Users", controllers.GetAllUsers)
 
 	r.PUT("/ServiceUpdate", controllers.ServicesUpdate)
 	r.GET("/AllServices", controllers.ServicesGetAll)
@@ -40,5 +41,9 @@ func main() {
 	r.GET("/AllServiceRequests")
 	r.POST("/ServiceRequestCreate", controllers.ServiceCreate)
 	r.DELETE("/DeleteServiceRequest", controllers.ServicesDelete)
+
+	r.POST("/CreateVehicle", controllers.CarInfoCreate)
+	r.GET("/GetVehicles", controllers.CarInfoGet)
+
 	r.Run()
 }

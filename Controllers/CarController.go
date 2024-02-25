@@ -10,20 +10,23 @@ import (
 func CarInfoCreate(c *gin.Context) {
 
 	var body struct {
-		UserId   uint
-		CarModel string
-		RegNo    string
+		Id           string
+		Userid       string
+		VehicleBrand string
+		VehicleModel string
+		RegNo        string
+		Color        string
+		Description  string
 	}
 
 	c.Bind(&body)
 
-	carInfo := models.Car{CarModel: body.CarModel, RegNo: body.RegNo}
+	carInfo := models.Vehicle{Id: body.Id, Userid: body.Userid, VehicleBrand: body.VehicleBrand, VehicleModel: body.VehicleModel, RegNo: body.RegNo, Color: body.Color, Description: body.Description}
 	result := initializers.DB.Create(&carInfo)
 
 	//create a get
 	if result.Error != nil {
 		c.Status(400)
-		return
 	}
 
 	c.JSON(200, gin.H{

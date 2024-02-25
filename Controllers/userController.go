@@ -18,23 +18,16 @@ func SignUp(c *gin.Context) {
 
 	//Get email/pass off req body
 	var body struct {
-		first_name  string
-		last_name   string
+		Id          string
+		First_name  string
+		Last_name   string
 		PhoneNumber string
 		Email       string
 		Password    string
-		role        string
-	}
-
-	if c.Bind(&body) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to read body",
-		})
-		return
+		Role        string
 	}
 
 	//Hash the password
-
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 
 	if err != nil {
@@ -44,17 +37,10 @@ func SignUp(c *gin.Context) {
 	}
 
 	//create the user
+	c.Bind(&body)
+	user := models.User{Id: body.Id, First_Name: body.First_name, Last_Name: body.Last_name, PhoneNumber: body.PhoneNumber, Email: body.Email, Password: string(hash), Role: body.Role}
+	initializers.DB.Create(&user)
 
-	user := models.User{First_Name: body.first_name, Last_Name: body.last_name, PhoneNumber: body.PhoneNumber, Email: body.Email, Password: string(hash), Role: body.role}
-	result := initializers.DB.Create(&user)
-
-	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to hash password",
-		})
-		return
-	}
-	//Respond
 	c.JSON(http.StatusOK, gin.H{})
 }
 
@@ -76,7 +62,7 @@ func Login(c *gin.Context) {
 	var user models.User
 	initializers.DB.First(&user, "email = ?", body.Email)
 
-	if user.ID == 0 {
+	if user.Id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email or password",
 		})
@@ -95,7 +81,7 @@ func Login(c *gin.Context) {
 	//generate a jwt toke
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.ID,
+		"sub": user.Id,
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
@@ -121,6 +107,16 @@ func Login(c *gin.Context) {
 func Validate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "I'm logged in",
+	})
+}
+
+func GetAllUsers(c *gin.Context) {
+	var users []models.User
+
+	initializers.DB.Find(&users)
+
+	c.JSON(200, gin.H{
+		"users": users,
 	})
 
 }

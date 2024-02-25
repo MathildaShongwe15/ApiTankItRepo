@@ -13,8 +13,6 @@ func UserRequestCreate(c *gin.Context) {
 		UserId     uint
 		ServicesId uint
 		Amount     float32
-		//Users  	   User
-
 	}
 
 	c.Bind(&body)

@@ -9,4 +9,5 @@ type Services struct {
 	gorm.Model
 	Description string
 	Type        string
+	Amount      float32
 }

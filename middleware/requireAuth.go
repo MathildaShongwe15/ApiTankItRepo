@@ -45,7 +45,7 @@ func RequireAuth(c *gin.Context) {
 
 		initializers.DB.First(&user, claims["sub"])
 
-		if user.ID == 0 {
+		if user.Id == "" {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 

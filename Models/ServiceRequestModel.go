@@ -1,22 +1,18 @@
 package models
 
-import (
-	//"github.com/google/uuid"
-	"time"
-
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type ServicesRequest struct {
 	gorm.Model
-
-	Id            string `gorm:"size:50;primaryKey"`
-	Serviceid     uint
-	Userid        uint
-	Carid         uint
-	Amount        float32
-	ScheduledDate time.Time
-	Users         User     `gorm:"foreignKey:Userid ;references:id;"`
-	Services      Services `gorm:"foreignKey:Serviceid ;references:id;"`
-	Car           Car      `gorm:"foreignKey:Carid ;references:id;"`
+	Id        string `gorm:"size:50;primaryKey"`
+	Serviceid uint
+	Userid    uint
+	Vehicleid uint
+	Qauntity  string
+	Type      string
+	Spare     bool
+	Amount    float32
+	Users     User     `gorm:"foreignKey:Userid ;references:Id;"`
+	Services  Services `gorm:"foreignKey:Serviceid ;references:id;"`
+	Vehicle   Vehicle  `gorm:"foreignKey:Vehicleid ;references:Id;"`
 }
