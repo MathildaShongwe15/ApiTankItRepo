@@ -15,18 +15,6 @@ func init() {
 func main() {
 	r := gin.Default()
 
-	// router := gin.New()
-	// router.Use(gin.Logger())
-
-	//routes.AuthRoutes(router)
-	//routes.UserRoutes(router)
-
-	//r.POST("/createRequest", controllers.UserRequestCreate)
-	//r.PUT("/request/:id", controllers.RequestTypeUpdate)
-	//r.GET("/AllservicesRequested", controllers.ServiceTypeGetAll)
-
-	//r.POST("/user", controllers.UserCreate)
-
 	r.POST("/Auth", controllers.SignUp)
 	r.POST("/Login", controllers.Login)
 	r.GET("/Validate", middleware.RequireAuth, controllers.Validate)
@@ -34,21 +22,25 @@ func main() {
 
 	r.PUT("/ServiceUpdate/:id", controllers.ServicesUpdateById)
 	r.GET("/AllServices", controllers.ServicesGetAll)
+	r.GET("/GetServiceById/:id", controllers.GetServicesById)
 	r.POST("/ServiceCreate", controllers.ServiceCreate)
 	r.DELETE("/DeleteService/:id", controllers.ServicesDeleteById)
 
 	r.PUT("/ServiceRequestUpdate/:id", controllers.UserRequestUpdate)
 	r.GET("/AllServiceRequests", controllers.UserRequestGetAll)
+	r.GET("/AllServiceRequestsById/:id", controllers.UserRequestGetById)
 	r.POST("/ServiceRequestCreate", controllers.UserRequestCreate)
 	r.DELETE("/DeleteServiceRequest/:id", controllers.UserRequestDelete)
 
 	r.POST("/CreateVehicle", controllers.VehicleInfoCreate)
 	r.GET("/GetAllVehicles", controllers.VehicleInfoGet)
+	r.GET("/GetVehicleById", controllers.GetVehicleById)
 	r.PUT("/UpdateVehicle/:id", controllers.VehicleInfoUpdate)
 	r.DELETE("/DeleteVehicle/:id", controllers.VehicleInfoDelete)
 
 	r.POST("/CreateProviders", controllers.ProvidersCreate)
 	r.GET("/GetProviders", controllers.ProvidersGetAll)
+	r.GET("/GetProviderById/:id", controllers.GetProviderById)
 	r.PUT("/UpdateProviderById/:id", controllers.ProvidersUpdateById)
 	r.DELETE("/DeleteProviderById/:id", controllers.ProviderDeleteById)
 

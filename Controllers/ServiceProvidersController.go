@@ -89,3 +89,21 @@ func ProvidersUpdateById(c *gin.Context) {
 		"result": "Service Provider Updated successsfully!",
 	})
 }
+
+func GetProviderById(c *gin.Context) {
+
+	var provider models.ServiceProvider
+	id := c.Param(("id"))
+
+	result := initializers.DB.Where("Id = ?", id).First(&provider)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve provider: %v\n", result.Error)
+	}
+
+	initializers.DB.Find(&provider)
+
+	c.JSON(200, gin.H{
+		"provider": provider,
+	})
+}

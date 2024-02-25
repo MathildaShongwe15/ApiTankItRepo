@@ -88,3 +88,21 @@ func UserRequestUpdate(c *gin.Context) {
 		"result": " request Updated successsfully!",
 	})
 }
+
+func UserRequestGetById(c *gin.Context) {
+
+	var request models.ServicesRequest
+	id := c.Param(("id"))
+
+	result := initializers.DB.Where("Id = ?", id).First(&request)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve request: %v\n", result.Error)
+	}
+
+	initializers.DB.Find(&request)
+
+	c.JSON(200, gin.H{
+		"requests": request,
+	})
+}

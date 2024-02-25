@@ -88,3 +88,21 @@ func ServicesUpdateById(c *gin.Context) {
 		"service": "Service  Updated successsfully!",
 	})
 }
+
+func GetServicesById(c *gin.Context) {
+
+	var service models.Services
+	id := c.Param(("id"))
+
+	result := initializers.DB.Where("Id = ?", id).First(&service)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve vehicle: %v\n", result.Error)
+	}
+
+	initializers.DB.Find(&service)
+
+	c.JSON(200, gin.H{
+		"service": service,
+	})
+}

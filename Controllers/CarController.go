@@ -97,3 +97,21 @@ func VehicleInfoUpdate(c *gin.Context) {
 		"result": " vehicle Updated successsfully!",
 	})
 }
+
+func GetVehicleById(c *gin.Context) {
+
+	var vehicle models.Vehicle
+	id := c.Param(("id"))
+
+	result := initializers.DB.Where("Id = ?", id).First(&vehicle)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve vehicle: %v\n", result.Error)
+	}
+
+	initializers.DB.Find(&vehicle)
+
+	c.JSON(200, gin.H{
+		"vehicle": vehicle,
+	})
+}
