@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	initializers "myapp/Initializers"
 	models "myapp/Models"
 
@@ -42,20 +43,27 @@ func ServicesGetAll(c *gin.Context) {
 	})
 }
 
-func ServicesDelete(c *gin.Context) {
+func ServicesDeleteById(c *gin.Context) {
 
-	var services []models.Services
+	var services models.Services
 	id := c.Param(("id"))
 
-	initializers.DB.Delete(&services, id)
+	result := initializers.DB.Where("Id = ?", id).First(&services)
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve service: %v\n", result.Error)
+	}
+
+	//initializers.DB.Delete(&provider)
+	result = initializers.DB.Delete(&services)
 
 	c.JSON(200, gin.H{
-		"services": services,
+		"result": "Service Deleted successsfully!",
 	})
 }
 
-func ServicesUpdate(c *gin.Context) {
+func ServicesUpdateById(c *gin.Context) {
 
+	var service models.Services
 	id := c.Param(("id"))
 
 	var body struct {
@@ -65,8 +73,11 @@ func ServicesUpdate(c *gin.Context) {
 
 	c.Bind(&body)
 
-	var service models.Services
-	initializers.DB.First(&service, id)
+	result := initializers.DB.Where("Id = ?", id).First(&service)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve Service: %v\n", result.Error)
+	}
 
 	initializers.DB.Model(&service).Updates(models.Services{
 		Description: body.Description,
@@ -74,6 +85,6 @@ func ServicesUpdate(c *gin.Context) {
 	})
 
 	c.JSON(200, gin.H{
-		"service": service,
+		"service": "Service  Updated successsfully!",
 	})
 }

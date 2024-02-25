@@ -32,18 +32,25 @@ func main() {
 	r.GET("/Validate", middleware.RequireAuth, controllers.Validate)
 	r.GET("/Users", controllers.GetAllUsers)
 
-	r.PUT("/ServiceUpdate", controllers.ServicesUpdate)
+	r.PUT("/ServiceUpdate/:id", controllers.ServicesUpdateById)
 	r.GET("/AllServices", controllers.ServicesGetAll)
 	r.POST("/ServiceCreate", controllers.ServiceCreate)
-	r.DELETE("/DeleteService", controllers.ServicesDelete)
+	r.DELETE("/DeleteService/:id", controllers.ServicesDeleteById)
 
-	r.PUT("/ServiceRequestUpdate")
-	r.GET("/AllServiceRequests")
-	r.POST("/ServiceRequestCreate", controllers.ServiceCreate)
-	r.DELETE("/DeleteServiceRequest", controllers.ServicesDelete)
+	r.PUT("/ServiceRequestUpdate/:id", controllers.UserRequestUpdate)
+	r.GET("/AllServiceRequests", controllers.UserRequestGetAll)
+	r.POST("/ServiceRequestCreate", controllers.UserRequestCreate)
+	r.DELETE("/DeleteServiceRequest/:id", controllers.UserRequestDelete)
 
-	r.POST("/CreateVehicle", controllers.CarInfoCreate)
-	r.GET("/GetVehicles", controllers.CarInfoGet)
+	r.POST("/CreateVehicle", controllers.VehicleInfoCreate)
+	r.GET("/GetAllVehicles", controllers.VehicleInfoGet)
+	r.PUT("/UpdateVehicle/:id", controllers.VehicleInfoUpdate)
+	r.DELETE("/DeleteVehicle/:id", controllers.VehicleInfoDelete)
+
+	r.POST("/CreateProviders", controllers.ProvidersCreate)
+	r.GET("/GetProviders", controllers.ProvidersGetAll)
+	r.PUT("/UpdateProviderById/:id", controllers.ProvidersUpdateById)
+	r.DELETE("/DeleteProviderById/:id", controllers.ProviderDeleteById)
 
 	r.Run()
 }
