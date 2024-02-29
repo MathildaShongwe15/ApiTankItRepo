@@ -36,12 +36,21 @@ func SignUp(c *gin.Context) {
 		})
 	}
 
+	c.BindJSON(&body)
 	//create the user
-	c.Bind(&body)
-	user := models.User{Id: body.Id, First_Name: body.First_name, Last_Name: body.Last_name, PhoneNumber: body.PhoneNumber, Email: body.Email, Password: string(hash), Role: body.Role}
-	initializers.DB.Create(&user)
+	user := models.User{Id: body.Id, First_Name: body.First_name, Last_Name: body.Last_name, Email: body.Email, PhoneNumber: body.PhoneNumber, Password: string(hash), Role: body.Role}
+	result := initializers.DB.Create(&user)
 
-	c.JSON(http.StatusOK, gin.H{})
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to create user",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"result": result,
+	})
 }
 
 func Login(c *gin.Context) {
@@ -78,7 +87,7 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	//generate a jwt toke
+	//generate a jwt token
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": user.Id,
