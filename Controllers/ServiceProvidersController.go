@@ -17,7 +17,7 @@ func ProvidersCreate(c *gin.Context) {
 		PhoneNumber string
 	}
 
-	c.Bind(&body)
+	c.BindJSON(&body)
 
 	providers := models.ServiceProvider{Id: body.Id, Name: body.Name, Email: body.Email, PhoneNumber: body.PhoneNumber}
 	result := initializers.DB.Create(&providers)

@@ -16,7 +16,7 @@ func UserRequestCreate(c *gin.Context) {
 		Amount     float32
 	}
 
-	c.Bind(&body)
+	c.BindJSON(&body)
 
 	serviceRequest := models.ServicesRequest{Userid: body.UserId, Serviceid: body.ServicesId, Amount: body.Amount}
 	result := initializers.DB.Create(&serviceRequest)

@@ -16,7 +16,7 @@ func ServiceCreate(c *gin.Context) {
 		Amount      float32
 	}
 
-	c.Bind(&body)
+	c.BindJSON(&body)
 
 	services := models.Services{Description: body.Description, Type: body.Type, Amount: body.Amount}
 	result := initializers.DB.Create(&services)

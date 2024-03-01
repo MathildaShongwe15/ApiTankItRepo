@@ -20,7 +20,7 @@ func VehicleInfoCreate(c *gin.Context) {
 		Description  string
 	}
 
-	c.Bind(&body)
+	c.BindJSON(&body)
 
 	carInfo := models.Vehicle{Id: body.Id, Userid: body.Userid, VehicleBrand: body.VehicleBrand, VehicleModel: body.VehicleModel, RegNo: body.RegNo, Color: body.Color, Description: body.Description}
 	result := initializers.DB.Create(&carInfo)
