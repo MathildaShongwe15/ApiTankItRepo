@@ -19,6 +19,7 @@ func main() {
 	r.POST("/Login", controllers.Login)
 	r.GET("/Validate", middleware.RequireAuth, controllers.Validate)
 	r.GET("/Users", controllers.GetAllUsers)
+	r.PUT("/ResetPassword/:email", controllers.ResetPassword)
 
 	r.PUT("/ServiceUpdate/:id", controllers.ServicesUpdateById)
 	r.GET("/AllServices", controllers.ServicesGetAll)

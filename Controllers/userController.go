@@ -1,15 +1,15 @@
 package controllers
 
 import (
+	"log"
 	initializers "myapp/Initializers"
 	models "myapp/Models"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
-
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,22 +21,22 @@ func SignUp(c *gin.Context) {
 		Id          string
 		First_name  string
 		Last_name   string
-		PhoneNumber string
 		Email       string
+		PhoneNumber string
 		Password    string
 		Role        string
 	}
 
+	c.BindJSON(&body)
 	//Hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Failed to hash password",
 		})
 	}
 
-	c.BindJSON(&body)
 	//create the user
 	user := models.User{Id: body.Id, First_Name: body.First_name, Last_Name: body.Last_name, Email: body.Email, PhoneNumber: body.PhoneNumber, Password: string(hash), Role: body.Role}
 	result := initializers.DB.Create(&user)
@@ -58,6 +58,7 @@ func Login(c *gin.Context) {
 	var body struct {
 		Email    string
 		Password string
+		Role     string
 	}
 
 	if c.BindJSON(&body) != nil {
@@ -73,7 +74,7 @@ func Login(c *gin.Context) {
 
 	if user.Id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or password",
+			"error": "Invalid email or password1",
 		})
 		return
 	}
@@ -83,7 +84,8 @@ func Login(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or password",
+			"error": "Invalid email or password2",
+			"err":   err,
 		})
 		return
 	}
@@ -108,8 +110,15 @@ func Login(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
 
+	if user.Role != body.Role {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Incorrect Role selected",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"token": tokenString,
+		"role":  user.Role,
 	})
 }
 
@@ -128,4 +137,36 @@ func GetAllUsers(c *gin.Context) {
 		"users": users,
 	})
 
+}
+func ResetPassword(c *gin.Context) {
+	var user models.User
+	email := c.Param(("email"))
+
+	var body struct {
+		Password string
+	}
+
+	c.Bind(&body)
+
+	result := initializers.DB.Where("email = ?", email).First(&user)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve user: %v\n", result.Error)
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Failed to hash password",
+		})
+	}
+
+	initializers.DB.Model(&user).Updates(models.User{
+		Password: string(hash),
+	})
+
+	c.JSON(200, gin.H{
+		"result": " Password Updated successsfully!",
+	})
 }
