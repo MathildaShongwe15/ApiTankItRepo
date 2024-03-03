@@ -170,3 +170,21 @@ func ResetPassword(c *gin.Context) {
 		"result": " Password Updated successsfully!",
 	})
 }
+
+func GetUserById(c *gin.Context) {
+
+	var user models.User
+	id := c.Param(("id"))
+
+	result := initializers.DB.Where("Id = ?", id).First(&user)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve provider: %v\n", result.Error)
+	}
+
+	initializers.DB.Find(&user)
+
+	c.JSON(200, gin.H{
+		"user": user,
+	})
+}
