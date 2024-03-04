@@ -21,6 +21,7 @@ func main() {
 	r.GET("/Users", controllers.GetAllUsers)
 	r.GET("Users/:id", controllers.GetUserById)
 	r.PUT("/ResetPassword/:email", controllers.ResetPassword)
+	r.PUT("/UserUpdate/:id", controllers.UserUpdate)
 
 	r.PUT("/ServiceUpdate/:id", controllers.ServicesUpdateById)
 	r.GET("/AllServices", controllers.ServicesGetAll)

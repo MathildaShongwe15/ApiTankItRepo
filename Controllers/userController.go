@@ -188,3 +188,34 @@ func GetUserById(c *gin.Context) {
 		"user": user,
 	})
 }
+
+func UserUpdate(c *gin.Context) {
+	var user models.User
+	id := c.Param(("id"))
+
+	var body struct {
+		First_name  string
+		Last_name   string
+		Email       string
+		PhoneNumber string
+	}
+
+	c.Bind(&body)
+
+	result := initializers.DB.Where("Id = ?", id).First(&user)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve request: %v\n", result.Error)
+	}
+
+	initializers.DB.Model(&user).Updates(models.User{
+		First_Name:  body.First_name,
+		Last_Name:   body.Last_name,
+		Email:       body.Email,
+		PhoneNumber: body.PhoneNumber,
+	})
+
+	c.JSON(200, gin.H{
+		"result": "user Updated successsfully!",
+	})
+}
