@@ -54,11 +54,13 @@ func SignUp(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
+
 	//get the email  and pass off request body
 	var body struct {
 		Email    string
 		Password string
 		Role     string
+		Id       string
 	}
 
 	if c.BindJSON(&body) != nil {
@@ -119,6 +121,7 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"token": tokenString,
 		"role":  user.Role,
+		"Id":    user.Id,
 	})
 }
 

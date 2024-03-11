@@ -37,12 +37,12 @@ func VehicleInfoCreate(c *gin.Context) {
 
 func VehicleInfoGet(c *gin.Context) {
 
-	var requests []models.ServicesRequest
+	var Vehicles []models.Vehicle
 
-	initializers.DB.Find(&requests)
+	initializers.DB.Find(&Vehicles)
 
 	c.JSON(200, gin.H{
-		"requests": requests,
+		"vehicle": Vehicles,
 	})
 }
 
@@ -53,13 +53,13 @@ func VehicleInfoDelete(c *gin.Context) {
 	result := initializers.DB.Where("Id = ?", id).First(&vehicle)
 
 	if result.Error != nil {
-		log.Fatalf("cannot retrieve request: %v\n", result.Error)
+		log.Fatalf("cannot retrieve vehicle: %v\n", result.Error)
 	}
 
 	initializers.DB.Delete(&vehicle)
 
 	c.JSON(200, gin.H{
-		"result": "Request Deleted successsfully!",
+		"result": "vehicle Deleted successsfully!",
 	})
 }
 

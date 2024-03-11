@@ -11,14 +11,19 @@ import (
 func UserRequestCreate(c *gin.Context) {
 
 	var body struct {
-		UserId     uint
-		ServicesId uint
-		Amount     float32
+		Id        string
+		Serviceid uint
+		Userid    string
+		Vehicleid string
+		Qauntity  string
+		Type      string
+		Spare     bool
+		Amount    uint32
 	}
 
 	c.BindJSON(&body)
 
-	serviceRequest := models.ServicesRequest{Userid: body.UserId, Serviceid: body.ServicesId, Amount: body.Amount}
+	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount}
 	result := initializers.DB.Create(&serviceRequest)
 
 	//create a get
