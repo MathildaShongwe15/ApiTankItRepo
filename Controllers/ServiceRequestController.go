@@ -18,12 +18,12 @@ func UserRequestCreate(c *gin.Context) {
 		Qauntity  string
 		Type      string
 		Spare     bool
-		Amount    uint32
+		Amount    uint
 	}
 
-	c.BindJSON(&body)
+	c.ShouldBindJSON(&body)
 
-	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount}
+	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Vehicleid: body.Vehicleid, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount}
 	result := initializers.DB.Create(&serviceRequest)
 
 	//create a get
@@ -72,7 +72,7 @@ func UserRequestUpdate(c *gin.Context) {
 	var body struct {
 		UserId     string
 		ServicesId uint
-		Amount     float32
+		Amount     uint
 	}
 
 	c.Bind(&body)

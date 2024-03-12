@@ -7,7 +7,7 @@ import (
 type ServicesRequest struct {
 	gorm.Model
 	Id        string `gorm:"size:50;primaryKey"`
-	Serviceid uint64
+	Serviceid uint
 	Userid    string
 	Vehicleid string
 	Qauntity  string
