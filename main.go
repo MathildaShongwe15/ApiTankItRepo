@@ -25,7 +25,7 @@ func main() {
 
 	r.PUT("/ServiceUpdate/:id", controllers.ServicesUpdateById)
 	r.GET("/AllServices", controllers.ServicesGetAll)
-	r.GET("/GetServiceById/:id", controllers.GetServicesById)
+	r.GET(" ", controllers.GetServicesById)
 	r.POST("/ServiceCreate", controllers.ServiceCreate)
 	r.DELETE("/DeleteService/:id", controllers.ServicesDeleteById)
 
@@ -46,6 +46,7 @@ func main() {
 	r.GET("/GetProviderById/:id", controllers.GetProviderById)
 	r.PUT("/UpdateProviderById/:id", controllers.ProvidersUpdateById)
 	r.DELETE("/DeleteProviderById/:id", controllers.ProviderDeleteById)
+	r.GET("/GetProviderByService/:Serviceid", controllers.GetProviderByService)
 
 	r.Run()
 }

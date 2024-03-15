@@ -12,14 +12,16 @@ func ProvidersCreate(c *gin.Context) {
 
 	var body struct {
 		Id          string
+		ServiceId   uint
 		Name        string
 		Email       string
 		PhoneNumber string
+		ServiceFee  uint
 	}
 
 	c.BindJSON(&body)
 
-	providers := models.ServiceProvider{Id: body.Id, Name: body.Name, Email: body.Email, PhoneNumber: body.PhoneNumber}
+	providers := models.ServiceProvider{Id: body.Id, Serviceid: body.ServiceId, Name: body.Name, Email: body.Email, PhoneNumber: body.PhoneNumber, ServiceFee: body.ServiceFee}
 	result := initializers.DB.Create(&providers)
 
 	if result.Error != nil {
@@ -105,5 +107,24 @@ func GetProviderById(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"provider": provider,
+	})
+}
+
+func GetProviderByService(c *gin.Context) {
+
+	var providers []models.ServiceProvider
+
+	serviceid := c.Param(("Serviceid"))
+
+	result := initializers.DB.Where("Serviceid = ?", serviceid).Find(&providers)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve providers: %v\n", result.Error)
+	}
+
+	initializers.DB.Where("Serviceid = ?", serviceid).Find(&providers)
+
+	c.JSON(200, gin.H{
+		"providers": providers,
 	})
 }

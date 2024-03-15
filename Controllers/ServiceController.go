@@ -13,12 +13,11 @@ func ServiceCreate(c *gin.Context) {
 	var body struct {
 		Description string
 		Type        string
-		Amount      float32
 	}
 
 	c.BindJSON(&body)
 
-	services := models.Services{Description: body.Description, Type: body.Type, Amount: body.Amount}
+	services := models.Services{Description: body.Description, Type: body.Type}
 	result := initializers.DB.Create(&services)
 
 	if result.Error != nil {
