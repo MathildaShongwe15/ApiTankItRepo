@@ -6,24 +6,26 @@ import (
 	models "myapp/Models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func UserRequestCreate(c *gin.Context) {
 
 	var body struct {
-		Id        string
-		Serviceid uint
-		Userid    string
-		Vehicleid string
-		Qauntity  string
-		Type      string
-		Spare     bool
-		Amount    uint
+		Id                string
+		Serviceid         uint
+		Userid            string
+		Vehicleid         string
+		ServiceProviderId string
+		Qauntity          string
+		Type              string
+		Spare             bool
+		Amount            uint
 	}
 
 	c.ShouldBindJSON(&body)
 
-	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Vehicleid: body.Vehicleid, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount}
+	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Vehicleid: body.Vehicleid, ServiceProviderId: body.ServiceProviderId, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount}
 	result := initializers.DB.Create(&serviceRequest)
 
 	//create a get
@@ -109,5 +111,22 @@ func UserRequestGetById(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"requests": request,
+	})
+}
+func UserRequestByProviderId(c *gin.Context) {
+
+	var requests []models.ServicesRequest
+	providerId := c.Param(("service_provider_id"))
+
+	result := initializers.DB.Where("service_provider_id = ?", providerId).Find(&requests)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve request: %v\n", result.Error)
+	}
+
+	//initializers.DB.Where("service_provider_id = ?", providerId).Find(&requests)
+	initializers.DB.Preload(clause.Associations).Where("service_provider_id = ?", providerId).Find(&requests)
+	c.JSON(200, gin.H{
+		"requests": requests,
 	})
 }

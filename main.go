@@ -32,6 +32,7 @@ func main() {
 	r.PUT("/ServiceRequestUpdate/:id", controllers.UserRequestUpdate)
 	r.GET("/AllServiceRequests", controllers.UserRequestGetAll)
 	r.GET("/AllServiceRequestsById/:id", controllers.UserRequestGetById)
+	r.GET("/UserRequestByProviderId/:service_provider_id", controllers.UserRequestByProviderId)
 	r.POST("/ServiceRequestCreate", controllers.UserRequestCreate)
 	r.DELETE("/DeleteServiceRequest/:id", controllers.UserRequestDelete)
 

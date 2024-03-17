@@ -96,7 +96,7 @@ func GetServicesById(c *gin.Context) {
 	result := initializers.DB.Where("Id = ?", id).First(&service)
 
 	if result.Error != nil {
-		log.Fatalf("cannot retrieve vehicle: %v\n", result.Error)
+		log.Fatalf("cannot retrieve service: %v\n", result.Error)
 	}
 
 	initializers.DB.Find(&service)
