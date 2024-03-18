@@ -72,12 +72,19 @@ func UserRequestUpdate(c *gin.Context) {
 	id := c.Param(("id"))
 
 	var body struct {
-		UserId     string
-		ServicesId uint
-		Amount     uint
+		Serviceid         uint
+		Userid            string
+		Vehicleid         string
+		ServiceProviderId string
+		Qauntity          string
+		Type              string
+		Spare             bool
+		Amount            uint
+		Longitude         float64
+		Latitude          float64
 	}
 
-	c.Bind(&body)
+	c.ShouldBindJSON(&body)
 
 	result := initializers.DB.Where("Id = ?", id).First(&request)
 
@@ -86,9 +93,17 @@ func UserRequestUpdate(c *gin.Context) {
 	}
 
 	initializers.DB.Model(&request).Updates(models.ServicesRequest{
-		Id:        body.UserId,
-		Serviceid: body.ServicesId,
-		Amount:    body.Amount,
+
+		Serviceid:         body.Serviceid,
+		Userid:            body.Userid,
+		Vehicleid:         body.Vehicleid,
+		ServiceProviderId: body.ServiceProviderId,
+		Qauntity:          body.Qauntity,
+		Type:              body.Type,
+		Spare:             body.Spare,
+		Amount:            body.Amount,
+		Longitude:         body.Longitude,
+		Latitude:          body.Latitude,
 	})
 
 	c.JSON(200, gin.H{

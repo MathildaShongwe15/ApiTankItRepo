@@ -6,6 +6,7 @@ import (
 	models "myapp/Models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func VehicleInfoCreate(c *gin.Context) {
@@ -100,18 +101,18 @@ func VehicleInfoUpdate(c *gin.Context) {
 
 func GetVehicleById(c *gin.Context) {
 
-	var vehicle models.Vehicle
-	id := c.Param(("id"))
+	var vehicles []models.Vehicle
+	UserId := c.Param(("Userid"))
 
-	result := initializers.DB.Where("Id = ?", id).First(&vehicle)
+	result := initializers.DB.Where("userid = ?", UserId).Find(&vehicles)
 
 	if result.Error != nil {
 		log.Fatalf("cannot retrieve vehicle: %v\n", result.Error)
 	}
 
-	initializers.DB.Find(&vehicle)
+	initializers.DB.Preload(clause.Associations).Where("userid = ?", UserId).Find(&vehicles)
 
 	c.JSON(200, gin.H{
-		"vehicle": vehicle,
+		"vehicle": vehicles,
 	})
 }

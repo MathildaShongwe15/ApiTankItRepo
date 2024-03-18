@@ -38,7 +38,7 @@ func main() {
 
 	r.POST("/CreateVehicle", controllers.VehicleInfoCreate)
 	r.GET("/GetAllVehicles", controllers.VehicleInfoGet)
-	r.GET("/GetVehicleById", controllers.GetVehicleById)
+	r.GET("/GetVehicleById/:Userid", controllers.GetVehicleById)
 	r.PUT("/UpdateVehicle/:id", controllers.VehicleInfoUpdate)
 	r.DELETE("/DeleteVehicle/:id", controllers.VehicleInfoDelete)
 

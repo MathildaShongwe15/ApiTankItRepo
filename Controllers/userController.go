@@ -18,13 +18,14 @@ func SignUp(c *gin.Context) {
 
 	//Get email/pass off req body
 	var body struct {
-		Id          string
-		First_name  string
-		Last_name   string
-		Email       string
-		PhoneNumber string
-		Password    string
-		Role        string
+		Id                string
+		ServiceProviderId *string
+		First_name        string
+		Last_name         string
+		Email             string
+		PhoneNumber       string
+		Password          string
+		Role              string
 	}
 
 	c.BindJSON(&body)
@@ -38,7 +39,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	//create the user
-	user := models.User{Id: body.Id, First_Name: body.First_name, Last_Name: body.Last_name, Email: body.Email, PhoneNumber: body.PhoneNumber, Password: string(hash), Role: body.Role}
+	user := models.User{Id: body.Id, ServiceProviderId: body.ServiceProviderId, First_Name: body.First_name, Last_Name: body.Last_name, Email: body.Email, PhoneNumber: body.PhoneNumber, Password: string(hash), Role: body.Role}
 	result := initializers.DB.Create(&user)
 
 	if result.Error != nil {
