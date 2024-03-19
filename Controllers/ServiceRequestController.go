@@ -107,7 +107,7 @@ func UserRequestUpdate(c *gin.Context) {
 	})
 
 	c.JSON(200, gin.H{
-		"result": " request Updated successsfully!",
+		"result": request,
 	})
 }
 
