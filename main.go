@@ -30,6 +30,7 @@ func main() {
 	r.DELETE("/DeleteService/:id", controllers.ServicesDeleteById)
 
 	r.PUT("/ServiceRequestUpdate/:id", controllers.UserRequestUpdate)
+	r.PUT("/ServiceRequestUpdateStatus/:id", controllers.UserRequestUpdateStatus)
 	r.GET("/AllServiceRequests", controllers.UserRequestGetAll)
 	r.GET("/AllServiceRequestsById/:id", controllers.UserRequestGetById)
 	r.GET("/UserRequestByProviderId/:service_provider_id", controllers.UserRequestByProviderId)

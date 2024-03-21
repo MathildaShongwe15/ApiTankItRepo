@@ -25,7 +25,7 @@ func UserRequestCreate(c *gin.Context) {
 
 	c.ShouldBindJSON(&body)
 
-	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Vehicleid: body.Vehicleid, ServiceProviderId: body.ServiceProviderId, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount}
+	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Vehicleid: body.Vehicleid, ServiceProviderId: body.ServiceProviderId, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount, Accepted: body.Accepted}
 	result := initializers.DB.Create(&serviceRequest)
 
 	//create a get
@@ -38,7 +38,6 @@ func UserRequestCreate(c *gin.Context) {
 		"request": serviceRequest,
 	})
 }
-
 func UserRequestGetAll(c *gin.Context) {
 
 	var requests []models.ServicesRequest
@@ -49,7 +48,6 @@ func UserRequestGetAll(c *gin.Context) {
 		"requests": requests,
 	})
 }
-
 func UserRequestDelete(c *gin.Context) {
 
 	var request models.ServicesRequest
@@ -66,7 +64,6 @@ func UserRequestDelete(c *gin.Context) {
 		"result": "Request Deleted successsfully!",
 	})
 }
-
 func UserRequestUpdate(c *gin.Context) {
 	var request models.ServicesRequest
 	id := c.Param(("id"))
@@ -110,7 +107,6 @@ func UserRequestUpdate(c *gin.Context) {
 		"result": request,
 	})
 }
-
 func UserRequestGetById(c *gin.Context) {
 
 	var request models.ServicesRequest
@@ -122,7 +118,8 @@ func UserRequestGetById(c *gin.Context) {
 		log.Fatalf("cannot retrieve request: %v\n", result.Error)
 	}
 
-	initializers.DB.Find(&request)
+	//initializers.DB.Find(&request)
+	initializers.DB.Preload(clause.Associations).Find(&request)
 
 	c.JSON(200, gin.H{
 		"requests": request,
@@ -143,5 +140,30 @@ func UserRequestByProviderId(c *gin.Context) {
 	initializers.DB.Preload(clause.Associations).Where("service_provider_id = ?", providerId).Find(&requests)
 	c.JSON(200, gin.H{
 		"requests": requests,
+	})
+}
+func UserRequestUpdateStatus(c *gin.Context) {
+	var request models.ServicesRequest
+	id := c.Param(("id"))
+
+	var body struct {
+		Accepted bool
+	}
+
+	c.ShouldBindJSON(&body)
+
+	result := initializers.DB.Where("Id = ?", id).First(&request)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve request: %v\n", result.Error)
+	}
+
+	initializers.DB.Model(&request).Updates(models.ServicesRequest{
+
+		Accepted: body.Accepted,
+	})
+
+	c.JSON(200, gin.H{
+		"result": request,
 	})
 }

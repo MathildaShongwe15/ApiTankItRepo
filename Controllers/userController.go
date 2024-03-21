@@ -60,8 +60,6 @@ func Login(c *gin.Context) {
 	var body struct {
 		Email    string
 		Password string
-		Role     string
-		Id       string
 	}
 
 	if c.BindJSON(&body) != nil {
@@ -113,16 +111,11 @@ func Login(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
 
-	if user.Role != body.Role {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Incorrect Role selected",
-		})
-		return
-	}
 	c.JSON(http.StatusOK, gin.H{
-		"token": tokenString,
-		"role":  user.Role,
-		"Id":    user.Id,
+		"token":      tokenString,
+		"role":       user.Role,
+		"Id":         user.Id,
+		"ProviderId": user.ServiceProviderId,
 	})
 }
 
