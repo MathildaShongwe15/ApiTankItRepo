@@ -21,6 +21,7 @@ func UserRequestCreate(c *gin.Context) {
 		Type              string
 		Spare             bool
 		Amount            uint
+		Accepted          bool
 	}
 
 	c.ShouldBindJSON(&body)

@@ -19,5 +19,6 @@ func main() {
 	initializers.DB.AutoMigrate(&models.Services{})
 	initializers.DB.AutoMigrate(&models.Vehicle{})
 	initializers.DB.AutoMigrate(&models.ServiceProvider{})
+	initializers.DB.AutoMigrate(&models.Graph{})
 
 }
