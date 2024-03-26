@@ -70,7 +70,6 @@ func VehicleInfoUpdate(c *gin.Context) {
 	id := c.Param(("id"))
 
 	var body struct {
-		Userid       string
 		VehicleBrand string
 		VehicleModel string
 		RegNo        string
@@ -86,7 +85,6 @@ func VehicleInfoUpdate(c *gin.Context) {
 	}
 
 	initializers.DB.Model(&vehicle).Updates(models.Vehicle{
-		Userid:       body.Userid,
 		VehicleBrand: body.VehicleBrand,
 		VehicleModel: body.VehicleModel,
 		RegNo:        body.RegNo,
@@ -114,5 +112,23 @@ func GetVehicleById(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"vehicle": vehicles,
+	})
+}
+
+func GetVehicleByVehId(c *gin.Context) {
+
+	var vehicle models.Vehicle
+	Id := c.Param(("id"))
+
+	result := initializers.DB.Where("id = ?", Id).Find(&vehicle)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve vehicle: %v\n", result.Error)
+	}
+
+	initializers.DB.Preload(clause.Associations).Where("id = ?", Id).Find(&vehicle)
+
+	c.JSON(200, gin.H{
+		"vehicle": vehicle,
 	})
 }

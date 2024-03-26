@@ -40,6 +40,7 @@ func main() {
 	r.POST("/CreateVehicle", controllers.VehicleInfoCreate)
 	r.GET("/GetAllVehicles", controllers.VehicleInfoGet)
 	r.GET("/GetVehicleById/:Userid", controllers.GetVehicleById)
+	r.GET("/GetVehicleByVehicleId/:id", controllers.GetVehicleByVehId)
 	r.PUT("/UpdateVehicle/:id", controllers.VehicleInfoUpdate)
 	r.DELETE("/DeleteVehicle/:id", controllers.VehicleInfoDelete)
 
@@ -49,6 +50,9 @@ func main() {
 	r.PUT("/UpdateProviderById/:id", controllers.ProvidersUpdateById)
 	r.DELETE("/DeleteProviderById/:id", controllers.ProviderDeleteById)
 	r.GET("/GetProviderByService/:Serviceid", controllers.GetProviderByService)
+
+	r.POST("/CreateStats", controllers.StatsCreate)
+	r.GET("/GetStatsById/:id", controllers.GetAllValuesbyProviderId)
 
 	r.Run()
 }
