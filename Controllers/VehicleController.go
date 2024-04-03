@@ -97,18 +97,18 @@ func VehicleInfoUpdate(c *gin.Context) {
 	})
 }
 
-func GetVehicleById(c *gin.Context) {
+func GetVehicleByUserId(c *gin.Context) {
 
 	var vehicles []models.Vehicle
-	UserId := c.Param(("Userid"))
+	Id := c.Param(("userid"))
 
-	result := initializers.DB.Where("userid = ?", UserId).Find(&vehicles)
+	result := initializers.DB.Where("userid = ?", Id).Find(&vehicles)
 
 	if result.Error != nil {
 		log.Fatalf("cannot retrieve vehicle: %v\n", result.Error)
 	}
 
-	initializers.DB.Preload(clause.Associations).Where("userid = ?", UserId).Find(&vehicles)
+	initializers.DB.Preload(clause.Associations).Where("userid = ?", Id).Find(&vehicles)
 
 	c.JSON(200, gin.H{
 		"vehicle": vehicles,

@@ -5,6 +5,7 @@ import (
 	initializers "myapp/Initializers"
 	models "myapp/Models"
 	"net/http"
+	"net/smtp"
 	"os"
 	"time"
 
@@ -159,6 +160,7 @@ func ResetPassword(c *gin.Context) {
 		})
 	}
 
+	ResetEmail()
 	initializers.DB.Model(&user).Updates(models.User{
 		Password: string(hash),
 	})
@@ -168,6 +170,24 @@ func ResetPassword(c *gin.Context) {
 	})
 }
 
+func ResetEmail() {
+	auth := smtp.PlainAuth(
+		"",
+		"tankitroadsideassistance@gmail.com",
+		"mflqvpvhtjfvbevg",
+		"smtp.gmail.com",
+	)
+	msg := "Subject: Successfully Reset Password\nYour password has been reset. If this was not you please resport to tankitroadsideassistance@gmail.com "
+
+	smtp.SendMail(
+		"smtp.gmail.com:587",
+		auth,
+		"tankitroadsideassistance@gmail.com",
+		[]string{"tankitroadsideassistance@gmail.com"},
+		[]byte(msg),
+	)
+
+}
 func GetUserById(c *gin.Context) {
 
 	var user models.User

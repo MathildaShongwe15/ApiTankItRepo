@@ -4,6 +4,7 @@ import (
 	"log"
 	initializers "myapp/Initializers"
 	models "myapp/Models"
+	"net/smtp"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
@@ -35,6 +36,7 @@ func UserRequestCreate(c *gin.Context) {
 		return
 	}
 
+	RequestEmail()
 	c.JSON(200, gin.H{
 		"request": serviceRequest,
 	})
@@ -167,4 +169,22 @@ func UserRequestUpdateStatus(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"result": request,
 	})
+}
+func RequestEmail() {
+	auth := smtp.PlainAuth(
+		"",
+		"tankitroadsideassistance@gmail.com",
+		"mflqvpvhtjfvbevg",
+		"smtp.gmail.com",
+	)
+	msg := "Subject: Request has been Placed\nYou have successfully placed your Request. If this was not you please report to tankitroadsideassistance@gmail.com "
+
+	smtp.SendMail(
+		"smtp.gmail.com:587",
+		auth,
+		"tankitroadsideassistance@gmail.com",
+		[]string{"tankitroadsideassistance@gmail.com"},
+		[]byte(msg),
+	)
+
 }
