@@ -30,7 +30,6 @@ func UserRequestCreate(c *gin.Context) {
 	serviceRequest := models.ServicesRequest{Id: body.Id, Serviceid: body.Serviceid, Userid: body.Userid, Vehicleid: body.Vehicleid, ServiceProviderId: body.ServiceProviderId, Qauntity: body.Qauntity, Type: body.Type, Spare: body.Spare, Amount: body.Amount, Accepted: body.Accepted}
 	result := initializers.DB.Create(&serviceRequest)
 
-	//create a get
 	if result.Error != nil {
 		c.Status(400)
 		return
@@ -121,7 +120,6 @@ func UserRequestGetById(c *gin.Context) {
 		log.Fatalf("cannot retrieve request: %v\n", result.Error)
 	}
 
-	//initializers.DB.Find(&request)
 	initializers.DB.Preload(clause.Associations).Find(&request)
 
 	c.JSON(200, gin.H{
@@ -139,7 +137,6 @@ func UserRequestByProviderId(c *gin.Context) {
 		log.Fatalf("cannot retrieve request: %v\n", result.Error)
 	}
 
-	//initializers.DB.Where("service_provider_id = ?", providerId).Find(&requests)
 	initializers.DB.Preload(clause.Associations).Where("service_provider_id = ?", providerId).Find(&requests)
 	c.JSON(200, gin.H{
 		"requests": requests,

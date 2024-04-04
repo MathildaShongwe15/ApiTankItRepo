@@ -3,6 +3,7 @@ package main
 import (
 	controllers "myapp/Controllers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	//Mail "myapp/Mail"
@@ -16,17 +17,13 @@ func init() {
 }
 func main() {
 
-	// router := mux.NewRouter()
-
-	// router.HandleFunc("/", testHandler).Methods("GET")
-	// http.ListenAndServe(":3000",
-	// 	handlers.CORS(
-	// 		handlers.AllowedOrigins([]string{"*"}),
-	// 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
-	// 		handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-	// 	)(router))
-
 	r := gin.Default()
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:8081"}
+	corsConfig.AllowCredentials = true
+	corsConfig.AddAllowMethods("OPTIONS")
+	r.Use(cors.New(corsConfig))
 
 	r.POST("/Auth", controllers.SignUp)
 	r.POST("/Login", controllers.Login)
@@ -65,14 +62,9 @@ func main() {
 	r.GET("/GetProviderByService/:Serviceid", controllers.GetProviderByService)
 
 	r.POST("/CreateStats", controllers.StatsCreate)
-	r.GET("/GetStatsById/:id", controllers.GetAllValuesbyProviderId)
+	r.GET("/GetStatsById/:service_provider_id", controllers.GetAllValuesByProviderId)
+	r.PUT("/UpdateStats/:service_provider_id", controllers.UpdateStats)
 
 	r.Run()
 
 }
-
-// func testHandler(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.WriteHeader(http.StatusOK)
-
-//}

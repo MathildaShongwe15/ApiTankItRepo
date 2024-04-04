@@ -32,46 +32,50 @@ func StatsCreate(c *gin.Context) {
 		"values": values,
 	})
 }
-func GetAllValuesbyProviderId(c *gin.Context) {
 
-	var values []models.Stats
+func GetAllValuesByProviderId(c *gin.Context) {
+	var stat models.Stats
+	id := c.Param(("service_provider_id"))
 
-	initializers.DB.Find(&values)
+	result := initializers.DB.Where("service_provider_id = ?", id).First(&stat)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve value: %v\n", result.Error)
+	}
+
+	initializers.DB.Where("service_provider_id = ?", id).First(&stat)
 
 	c.JSON(200, gin.H{
-		"values": values,
+		"values": stat,
 	})
 }
-func GraphUpdateCount(c *gin.Context) {
+
+func UpdateStats(c *gin.Context) {
 	var values models.Stats
-	id := c.Param(("ServiceProviderId"))
+	id := c.Param(("service_provider_id"))
 
 	var body struct {
-		ServiceProviderId string
-		ReqPending        uint
-		ReqCompleted      uint
-		ReqCancelled      uint
-		ReqLogged         uint
+		ReqPending   uint
+		ReqCompleted uint
+		ReqCancelled uint
+		ReqLogged    uint
 	}
 
 	c.ShouldBindJSON(&body)
 
-	result := initializers.DB.Where("ServiceProviderId = ?", id).First(&values)
+	result := initializers.DB.Where("service_provider_id = ?", id).First(&values)
 
 	if result.Error != nil {
 		log.Fatalf("cannot retrieve values: %v\n", result.Error)
 	}
 
 	initializers.DB.Model(&values).Updates(models.Stats{
-
-		ServiceProviderId: body.ServiceProviderId,
-		ReqPending:        body.ReqPending,
-		ReqCompleted:      body.ReqCompleted,
-		ReqCancelled:      body.ReqCancelled,
-		ReqLogged:         body.ReqLogged})
+		ReqPending:   body.ReqPending,
+		ReqCompleted: body.ReqCompleted,
+		ReqCancelled: body.ReqCancelled,
+		ReqLogged:    body.ReqLogged})
 
 	c.JSON(200, gin.H{
 		"values": values,
 	})
-
 }

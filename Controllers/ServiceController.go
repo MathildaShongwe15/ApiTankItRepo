@@ -30,7 +30,6 @@ func ServiceCreate(c *gin.Context) {
 	})
 }
 
-// View all request types
 func ServicesGetAll(c *gin.Context) {
 
 	var services []models.Services
@@ -52,8 +51,7 @@ func ServicesDeleteById(c *gin.Context) {
 		log.Fatalf("cannot retrieve service: %v\n", result.Error)
 	}
 
-	//initializers.DB.Delete(&provider)
-	result = initializers.DB.Delete(&services)
+	initializers.DB.Delete(&services)
 
 	c.JSON(200, gin.H{
 		"result": "Service Deleted successsfully!",

@@ -14,10 +14,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// import "net/http"
 func SignUp(c *gin.Context) {
 
-	//Get email/pass off req body
 	var body struct {
 		Id                string
 		ServiceProviderId *string
@@ -30,7 +28,6 @@ func SignUp(c *gin.Context) {
 	}
 
 	c.BindJSON(&body)
-	//Hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 
 	if err != nil {
@@ -39,7 +36,6 @@ func SignUp(c *gin.Context) {
 		})
 	}
 
-	//create the user
 	user := models.User{Id: body.Id, ServiceProviderId: body.ServiceProviderId, First_Name: body.First_name, Last_Name: body.Last_name, Email: body.Email, PhoneNumber: body.PhoneNumber, Password: string(hash), Role: body.Role}
 	result := initializers.DB.Create(&user)
 
@@ -57,7 +53,6 @@ func SignUp(c *gin.Context) {
 
 func Login(c *gin.Context) {
 
-	//get the email  and pass off request body
 	var body struct {
 		Email    string
 		Password string
@@ -70,7 +65,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	//Look up requested user
 	var user models.User
 	initializers.DB.First(&user, "email = ?", body.Email)
 
@@ -80,7 +74,6 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	//compare sent in pass with saved user pass hash
 
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 
@@ -91,14 +84,12 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	//generate a jwt token
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": user.Id,
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
-	// Sign and get the complete encoded token as a string using the secret
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 
 	if err != nil {
@@ -107,8 +98,6 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	//send it back
-	//cookie
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
 
@@ -177,7 +166,7 @@ func ResetEmail() {
 		"mflqvpvhtjfvbevg",
 		"smtp.gmail.com",
 	)
-	msg := "Subject: Successfully Reset Password\nYour password has been reset. If this was not you please resport to tankitroadsideassistance@gmail.com "
+	msg := "Subject: Reset Password\nYour OTP for reset. If this was not you please resport to tankitroadsideassistance@gmail.com "
 
 	smtp.SendMail(
 		"smtp.gmail.com:587",
