@@ -22,14 +22,15 @@ func main() {
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:8081"}
 	corsConfig.AllowCredentials = true
-	corsConfig.AddAllowMethods("OPTIONS")
+	corsConfig.AddAllowMethods("GET", "POST", "OPTIONS")
 	r.Use(cors.New(corsConfig))
 
 	r.POST("/Auth", controllers.SignUp)
 	r.POST("/Login", controllers.Login)
 	r.GET("/Validate", middleware.RequireAuth, controllers.Validate)
 	r.GET("/Users", controllers.GetAllUsers)
-	r.GET("Users/:id", controllers.GetUserById)
+	r.GET("/Users/:id", controllers.GetUserById)
+	r.GET("/GetUserByEmail/:email", controllers.GetUserByEmail)
 	r.PUT("/ResetPassword/:email", controllers.ResetPassword)
 	r.PUT("/UserUpdate/:id", controllers.UserUpdate)
 
@@ -43,6 +44,7 @@ func main() {
 	r.PUT("/ServiceRequestUpdateStatus/:id", controllers.UserRequestUpdateStatus)
 	r.GET("/AllServiceRequests", controllers.UserRequestGetAll)
 	r.GET("/AllServiceRequestsById/:id", controllers.UserRequestGetById)
+	r.GET("/AllServiceRequestsByUserId/:userid", controllers.UserRequestGetByUserId)
 	r.GET("/UserRequestByProviderId/:service_provider_id", controllers.UserRequestByProviderId)
 	r.POST("/ServiceRequestCreate", controllers.UserRequestCreate)
 	r.DELETE("/DeleteServiceRequest/:id", controllers.UserRequestDelete)
@@ -63,7 +65,7 @@ func main() {
 
 	r.POST("/CreateStats", controllers.StatsCreate)
 	r.GET("/GetStatsById/:service_provider_id", controllers.GetAllValuesByProviderId)
-	r.PUT("/UpdateStats/:service_provider_id", controllers.UpdateStats)
+	// r.PUT("/UpdateStats/:service_provider_id", controllers.UpdateStats)
 
 	r.Run()
 

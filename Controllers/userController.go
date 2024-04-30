@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"log"
+	"math/rand"
 	initializers "myapp/Initializers"
 	models "myapp/Models"
 	"net/http"
 	"net/smtp"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -149,7 +151,6 @@ func ResetPassword(c *gin.Context) {
 		})
 	}
 
-	ResetEmail()
 	initializers.DB.Model(&user).Updates(models.User{
 		Password: string(hash),
 	})
@@ -160,13 +161,18 @@ func ResetPassword(c *gin.Context) {
 }
 
 func ResetEmail() {
+
+	otp := rand.Intn(999999)
+	otpString := strconv.Itoa(otp)
+
 	auth := smtp.PlainAuth(
 		"",
 		"tankitroadsideassistance@gmail.com",
 		"mflqvpvhtjfvbevg",
 		"smtp.gmail.com",
 	)
-	msg := "Subject: Reset Password\nYour OTP for reset. If this was not you please resport to tankitroadsideassistance@gmail.com "
+	rand.Int()
+	msg := "Subject: Reset Password\nYour OTP for reset" + otpString + "If this was not you please resport to tankitroadsideassistance@gmail.com"
 
 	smtp.SendMail(
 		"smtp.gmail.com:587",
@@ -194,7 +200,55 @@ func GetUserById(c *gin.Context) {
 		"user": user,
 	})
 }
+func GetUserByEmail(c *gin.Context) {
 
+	var user models.User
+	id := c.Param(("email"))
+
+	result := initializers.DB.Where("email = ?", id).First(&user)
+
+	if result.Error != nil {
+		log.Fatalf("cannot retrieve user: %v\n", result.Error)
+	}
+
+	initializers.DB.Find(&user)
+
+	if http.StatusOK == 200 {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "user does exist",
+		})
+
+	}
+	if http.StatusOK == 404 {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "user does NOT exist",
+		})
+
+	}
+
+	//ResetEmail()
+	//generate random OTP to user
+	otp := rand.Intn(999999)
+	otpString := strconv.Itoa(otp)
+
+	auth := smtp.PlainAuth(
+		"",
+		"tankitroadsideassistance@gmail.com",
+		"mflqvpvhtjfvbevg",
+		"smtp.gmail.com",
+	)
+	rand.Int()
+	msg := "Subject: Reset Password\nYour OTP for reset " + otpString + " If this was not you please report to tankitroadsideassistance@gmail.com"
+
+	smtp.SendMail(
+		"smtp.gmail.com:587",
+		auth,
+		"tankitroadsideassistance@gmail.com",
+		[]string{"tankitroadsideassistance@gmail.com"},
+		[]byte(msg),
+	)
+
+}
 func UserUpdate(c *gin.Context) {
 	var user models.User
 	id := c.Param(("id"))
