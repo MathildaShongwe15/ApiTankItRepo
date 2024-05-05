@@ -46,7 +46,7 @@ func UserRequestGetAll(c *gin.Context) {
 
 	var requests []models.ServicesRequest
 
-	initializers.DB.Find(&requests)
+	initializers.DB.Preload(clause.Associations).Find(&requests)
 
 	c.JSON(200, gin.H{
 		"requests": requests,

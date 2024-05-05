@@ -279,3 +279,25 @@ func UserUpdate(c *gin.Context) {
 		"result": "user Updated successsfully!",
 	})
 }
+
+// func Main() {
+// 	// create new fiber instance  and use across whole app
+// 	app := fiber.New()
+
+// 	// serve  images from images directory prefixed with /images
+// 	// i.e http://localhost:4000/images/someimage.webp
+
+// 	app.Static("/images", "./images")
+
+// 	// handle image uploading using post request
+
+// 	app.Post("/", handleFileupload)
+
+// 	// delete uploaded image by providing unique image name
+
+// 	app.Delete("/:imageName", handleDeleteImage)
+
+// 	// start dev server on port 4000
+
+// 	log.Fatal(app.Listen(":4000"))
+// }

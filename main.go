@@ -20,7 +20,7 @@ func main() {
 	r := gin.Default()
 
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:8081"}
+	corsConfig.AllowOrigins = []string{"http://localhost:5173"}
 	corsConfig.AllowCredentials = true
 	corsConfig.AddAllowMethods("GET", "POST", "OPTIONS")
 	r.Use(cors.New(corsConfig))

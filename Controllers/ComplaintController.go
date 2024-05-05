@@ -6,6 +6,7 @@ import (
 	models "myapp/Models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func CreateComplaint(c *gin.Context) {
@@ -37,6 +38,8 @@ func GetAllComplaints(c *gin.Context) {
 	var complaints []models.Complaint
 
 	initializers.DB.Find(&complaints)
+
+	initializers.DB.Preload(clause.Associations).Find(&complaints)
 
 	c.JSON(200, gin.H{
 		"Complaints": complaints,
