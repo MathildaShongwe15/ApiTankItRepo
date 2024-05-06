@@ -6,6 +6,7 @@ import (
 	models "myapp/Models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func ProvidersCreate(c *gin.Context) {
@@ -38,7 +39,7 @@ func ProvidersGetAll(c *gin.Context) {
 
 	var providers []models.ServiceProvider
 
-	initializers.DB.Find(&providers)
+	initializers.DB.Preload(clause.Associations).Find(&providers)
 
 	c.JSON(200, gin.H{
 		"providers": providers,

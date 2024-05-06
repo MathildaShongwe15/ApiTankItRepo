@@ -70,7 +70,7 @@ func main() {
 	r.POST("/CreateComplaint", controllers.CreateComplaint)
 	r.GET("/GetAllComplaints", controllers.GetAllComplaints)
 	r.GET("/GetComplaintsById/:service_provider_id", controllers.GetComplaintsByProviderId)
-	r.PUT("/UpdateComplaints/:id", controllers.UpdateComplaintsById)
+	r.PUT("/UpdateComplaints/:Id", controllers.UpdateComplaintsById)
 	r.DELETE("/DeleteComplaint/:id", controllers.DeleteComplaintsById)
 	r.Run()
 

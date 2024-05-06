@@ -67,13 +67,14 @@ func GetComplaintsByProviderId(c *gin.Context) {
 func UpdateComplaintsById(c *gin.Context) {
 
 	var Complaints models.Complaint
-	id := c.Param(("id"))
+	id := c.Param(("Id"))
 
 	var body struct {
 		ServiceProviderId    string
 		UserId               string
 		ComplaintTitle       string
 		ComplaintDescription string
+		Status               string
 	}
 
 	c.Bind(&body)
@@ -85,10 +86,8 @@ func UpdateComplaintsById(c *gin.Context) {
 	}
 
 	initializers.DB.Model(&Complaints).Updates(models.Complaint{
-		ServiceProviderId:    body.ServiceProviderId,
-		UserId:               body.UserId,
-		ComplaintTitle:       body.ComplaintTitle,
-		ComplaintDescription: body.ComplaintDescription,
+
+		Status: body.Status,
 	})
 
 	c.JSON(200, gin.H{

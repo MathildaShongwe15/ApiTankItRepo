@@ -108,6 +108,7 @@ func Login(c *gin.Context) {
 		"role":       user.Role,
 		"Id":         user.Id,
 		"ProviderId": user.ServiceProviderId,
+		"FirstName":  user.First_Name,
 	})
 }
 
