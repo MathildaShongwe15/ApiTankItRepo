@@ -9,6 +9,7 @@ type User struct {
 	First_Name        string `validate:"required, min=5, max=100"`
 	Last_Name         string `validate:"required, min=5, max=100"`
 	Email             string `gorm:"unique"`
+	IdNumber          string `gorm:unique`
 	PhoneNumber       string `gorm:"size:10"`
 	Password          string
 	Role              string          ` validate:"required, eq=SERVICE PROVIDER|ew=CUSTOMER"`
